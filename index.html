@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Landing Page</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-image: url('background.jpg'); /* Replace 'background.jpg' with your image path */
+            background-size: cover;
+            background-position: center;
+        }
+        .container {
+            background-color: rgba(255, 255, 255, 0.8); /* Adjust the background color and opacity */
+            padding: 50px; /* Adjust the padding to make the rectangle bigger */
+            border-radius: 20px; /* Adjust the curve of the edges */
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3); /* Add shadow effect */
+            backdrop-filter: blur(8px); /* Adjust the blur effect */
+        }
+        .button {
+            display: block;
+            width: 200px;
+            margin: 10px auto;
+            padding: 15px 20px;
+            border: none;
+            border-radius: 10px; /* Adjust the curve of the button edges */
+            background-color: #4CAF50; /* Green */
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .button:hover {
+            background-color: #45a049; /* Darker green */
+        }
+    </style>
+     <!-- Firebase SDK -->
+     <script src="https://www.gstatic.com/firebasejs/8.3.0/firebase-app.js"></script>
+     <script src="https://www.gstatic.com/firebasejs/8.3.0/firebase-storage.js"></script>
+     <!-- Your Firebase config -->
+     <script>
+         var firebaseConfig = {
+            apiKey: "AIzaSyCsHO-wMDV-NVrKyKkTIRqMpRaW_Y_smc8",
+            authDomain: "facial-detect-esp32.firebaseapp.com",
+            projectId: "facial-detect-esp32",
+            storageBucket: "facial-detect-esp32.appspot.com",
+            messagingSenderId: "615843864531",
+            appId: "1:615843864531:web:a4020417ae459ca7e7d926",
+                measurementId: "G-DVJHHWJ6ES"
+         };
+         // Initialize Firebase
+         firebase.initializeApp(firebaseConfig);
+     </script>
+</head>
+<body>
+    <script>
+        // Function to upload image to Firebase Storage
+        function uploadImage() {
+            var fileInput = document.getElementById('fileInput');
+            var file = fileInput.files[0];
+            if (file) {
+                var storageRef = firebase.storage().ref();
+                var imagesRef = storageRef.child('images/' + file.name);
+                imagesRef.put(file).then(function(snapshot) {
+                    console.log('Uploaded a file!');
+                }).catch(function(error) {
+                    console.error('Upload failed:', error);
+                });
+            }
+        }
+    </script>
+    <div class="container">
+        <!-- <h1 style="text-align: center;">Welcome to the Landing Page</h1> -->
+        <button class="button" onclick="document.getElementById('fileInput').click()">Choose File</button>
+        <input type="file" id="fileInput" style="display: none;">
+        <button class="button" onclick="uploadImage()">Upload</button>
+        <a href="http://127.0.0.1:5500/display.html" class="button">Image Gallery</a>
+    </div>
+</body>
+</html>

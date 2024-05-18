@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Gallery</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 0 20px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .image {
+            margin: 20px;
+            width: 200px; /* Set fixed width */
+            height: 200px; /* Set fixed height */
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        .image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Maintain aspect ratio */
+        }
+        .image:hover {
+            transform: scale(1.05);
+        }
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 36px;
+            position: relative;
+            animation: fadeIn 1s ease;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Image Gallery</h1>
+    <div class="container" id="imageContainer">
+        <!-- Images will be dynamically added here -->
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.3.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.3.0/firebase-storage.js"></script>
+    <script>
+        // Your Firebase configuration
+        var firebaseConfig = {
+            apiKey: "AIzaSyCsHO-wMDV-NVrKyKkTIRqMpRaW_Y_smc8",
+            authDomain: "facial-detect-esp32.firebaseapp.com",
+            projectId: "facial-detect-esp32",
+            storageBucket: "facial-detect-esp32.appspot.com",
+            messagingSenderId: "615843864531",
+            appId: "1:615843864531:web:a4020417ae459ca7e7d926",
+            measurementId: "G-DVJHHWJ6ES"
+        };
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+
+        // Reference to the Firebase storage service
+        var storage = firebase.storage();
+        var storageRef = storage.ref();
+        var imagesRef = storageRef.child('images');
+
+        // Function to display images
+        function displayImages() {
+            imagesRef.listAll().then(function(result) {
+                result.items.forEach(function(imageRef) {
+                    imageRef.getDownloadURL().then(function(url) {
+                        // Create div with image class
+                        var div = document.createElement('div');
+                        div.classList.add('image');
+
+                        // Create img element
+                        var img = document.createElement('img');
+                        img.src = url;
+
+                        // Append img to div
+                        div.appendChild(img);
+
+                        // Append div to imageContainer
+                        document.getElementById('imageContainer').appendChild(div);
+                    });
+                });
+            }).catch(function(error) {
+                console.error('Error getting images:', error);
+            });
+        }
+
+        // Call function to display images
+        displayImages();
+    </script>
+</body>
+</html>
